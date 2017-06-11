@@ -11834,7 +11834,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Import libraries necessary for this project</span>
@@ -13917,7 +13917,8 @@ Max depth of 3 seems to be optimal - the training score and the test score are b
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer: </strong>
-K-fold cross validation is the technique of splitting a dataset into k different combinations of test and training sets and then training models on each combination. For grid search, k-fold cross validation ensures that we are not by accident overfitting our hyperparameters on the train/test split set which can happen when we don't have a cross-validated set.</p>
+K-fold cross validation is the technique of splitting a dataset into k different combinations of test and training sets and then training models on each combination. As an example, let's take k=3. In this case, the dataset is split into three parts or subsamples and three models are trained and compared against each other. The first of these three models is trained with the first two subsamples used for training and then tested on the third subsample. The other two models are trained and tested on different subsamples. In general, k-1 subsamples are used for training and the remaining subsample is used for testing. Typically, we use cross-validation to compare between different hyperparameters and we select the model which has the best average score after cross-validation.</p>
+<p>For grid search where we are looking for the best hyperparameters within the grid, k-fold cross validation ensures that we are not by accident overfitting our hyperparameters on the train/test split set which can happen when we don't have a cross-validated set.</p>
 
 </div>
 </div>
@@ -14172,9 +14173,169 @@ Predicted selling price for Client 3&#39;s home: $878,220.00
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer: </strong>
 I would probably recommend the clients sell their house at or very close to the predicted prices. The prices predicted by the model seems quite reasonable for the features associated with these homes and also fall within the minimum and maximum of the dataset.</p>
+<p>For Client 3, PTRATIO and LSTAT are very close to the minimum in the dataset, and the RM is very close to the maximum. From our earlier analysis of correlations, this implies that this will be a pricy home.</p>
+<p>For Client 2, RM is below the median and the PTRATIO and  LSTAT are close to the maximum implying that this house is not in a very desirable neighbourhood leading to a lower price.</p>
+<p>Client 1 seems to be a trickier case. The LSTAT is on the higher side and RM is on the lower side, tending one to predict a low price for this home, but the low value of PTRATIO implies that the schools in this neighbourhood are better than average and raises the price of this house up towards the median home price.</p>
+<p>I used the stats below to understand some of these predictions.</p>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong> Stats for the features </strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">features</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[12]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>RM</th>
+      <th>LSTAT</th>
+      <th>PTRATIO</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>489.000000</td>
+      <td>489.000000</td>
+      <td>489.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>6.240288</td>
+      <td>12.939632</td>
+      <td>18.516564</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>0.643650</td>
+      <td>7.081990</td>
+      <td>2.111268</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>3.561000</td>
+      <td>1.980000</td>
+      <td>12.600000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>5.880000</td>
+      <td>7.370000</td>
+      <td>17.400000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>6.185000</td>
+      <td>11.690000</td>
+      <td>19.100000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>6.575000</td>
+      <td>17.120000</td>
+      <td>20.200000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>8.398000</td>
+      <td>37.970000</td>
+      <td>22.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">prices</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[14]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>count    4.890000e+02
+mean     4.543429e+05
+std      1.653403e+05
+min      1.050000e+05
+25%      3.507000e+05
+50%      4.389000e+05
+75%      5.187000e+05
+max      1.024800e+06
+Name: MEDV, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>

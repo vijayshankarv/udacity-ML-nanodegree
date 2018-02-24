@@ -50,7 +50,7 @@ class Simulator(object):
         self.start_time = None
         self.current_time = 0.0
         self.last_updated = 0.0
-        self.update_delay = update_delay  # duration between each step (in seconds)
+        self.update_delay = 0.01  # duration between each step (in seconds)
 
         self.display = display
         if self.display:
@@ -84,7 +84,7 @@ class Simulator(object):
                 print "Simulator.__init__(): Error initializing GUI objects; display disabled.\n{}: {}".format(e.__class__.__name__, e)
 
         # Setup metrics to report
-        self.log_metrics = log_metrics
+        self.log_metrics = True
         self.optimized = optimized
         
         if self.log_metrics:
@@ -108,7 +108,7 @@ class Simulator(object):
             self.log_writer = csv.DictWriter(self.log_file, fieldnames=self.log_fields)
             self.log_writer.writeheader()
 
-    def run(self, tolerance=0.05, n_test=0):
+    def run(self, tolerance=0.05, n_test=10):
         """ Run a simulation of the environment. 
 
         'tolerance' is the minimum epsilon necessary to begin testing (if enabled)
